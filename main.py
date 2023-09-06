@@ -10,7 +10,7 @@ audio = sr.Recognizer()
 maquina = pyttsx3.init()
 
 eu = config('EU_NUMBER')
-rose = config('ROSE_NUMBER')
+rose = config('MOM_NUMBER')
 
 
 audio.energy_threshold = 4000
@@ -78,7 +78,7 @@ def enviar_mensagem(numero, mensagem):
     
 def comando_envia_mensagem(comando): 
     eu = config('EU_NUMBER')  
-    rose = config('ROSE_NUMBER')
+    rose = config('MOM_NUMBER')
     if 'mensagem para eu' in comando:
         numero = eu
         mensagem = comando.split(' ', 3)[-1].strip()
