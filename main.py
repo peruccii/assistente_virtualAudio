@@ -4,10 +4,16 @@ import datetime
 import pywhatkit
 import os
 import webbrowser
+from decouple import config
 
 audio = sr.Recognizer()
 maquina = pyttsx3.init()
 
+eu = config('EU_NUMBER')
+rose = config('ROSE_NUMBER')
+
+
+audio.energy_threshold = 4000
 
 dormindo = False
 
@@ -49,7 +55,7 @@ def comando_spotify():
     os.system('start Spotify')
     maquina.say('Abrindo Spotify')
     maquina.runAndWait()
-    
+
 def comando_fortnite():
     webbrowser.open("com.epicgames.launcher://apps/fn%3A4fe75bbc5a674f4f9b356b5c90567da5%3AFortnite?action=launch&silent=true")
     maquina.say('Abrindo Fortnite')
@@ -62,6 +68,26 @@ def comando_abra(comando):
     webbrowser.open_new_tab(url)
     maquina.say('Abrindo {}'.format(app))
     maquina.runAndWait()
+    
+
+    
+def enviar_mensagem(numero, mensagem):
+    pywhatkit.sendwhatmsg_instantly(numero, mensagem, 8, 57)
+    maquina.say(f'Mensagem para {numero} enviada com sucesso.')
+    maquina.runAndWait()
+    
+def comando_envia_mensagem(comando): 
+    eu = config('EU_NUMBER')  
+    rose = config('ROSE_NUMBER')
+    if 'mensagem para eu' in comando:
+        numero = eu
+        mensagem = comando.split(' ', 3)[-1].strip()
+        enviar_mensagem(numero, mensagem)
+    elif 'mensagem para pai' in comando:
+        numero = rose
+        mensagem = comando.split(' ', 3)[-1].strip()
+        enviar_mensagem(numero, mensagem)
+
 
 while True:
     comando = executa_comando()
@@ -85,6 +111,8 @@ while True:
                 comando_abra(comando)
             elif 'ligue o fortnite' in comando:
                 comando_fortnite()
+            elif 'mensagem para' in comando:
+                comando_envia_mensagem(comando)
             elif 'durma java' in comando:
                 dormindo = True
                 maquina.say('Java está dormindo. Não vou ouvir comandos.')
